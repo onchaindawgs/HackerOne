@@ -4,12 +4,14 @@ module hackerOne::HackerOneCore {
    use aptos_framework::table::{Self, Table};
    use std::vector;
 
-   struct Hacker has store, copy, drop{
-    addr : address,
+   struct Hacker has store, copy, drop {
+    addr: address,
     dataHash: String,
-    pastHackathons : vector<u64>,
+    pastHackathons: vector<u64>,
+    teamInvites: vector<u64>,  
+    teamsJoined: vector<u64>,  
     devScore: u64,
-   }
+}
 
    struct Hackers has key{
       hackers : Table<address,Hacker>,
@@ -69,6 +71,8 @@ module hackerOne::HackerOneCore {
          addr,
          dataHash,
          pastHackathons : vector::empty<u64>(),
+         teamInvites :  vector::empty<u64>(),
+         teamsJoined: vector::empty<u64>(),
          devScore,
       };
       table::add<address, Hacker>(&mut borrow_global_mut<Hackers>(@hackerOne).hackers, addr, hacker);
@@ -162,5 +166,62 @@ module hackerOne::HackerOneCore {
       table::add<u64, Team>(&mut teams_mut.teams, team_id, team);
       vector::push_back(table::borrow_mut<u64, vector<u64>>(&mut borrow_global_mut<HackathoTeamsMap>(@hackerOne).hackathonTeams, hackathon_id), team_id)
    }
+
+   public entry fun InviteHackerToTeam(
+      account: &signer, 
+      team_id: u64, 
+      invited_hacker: address
+   ) acquires Teams, Hackers {
+      // Verify the inviter is the team leader
+      let teams_mut = borrow_global_mut<Teams>(@hackerOne);
+      let team_ref = table::borrow_mut<u64, Team>(&mut teams_mut.teams, team_id);
+      
+      let inviter = signer::address_of(account);
+      assert!(team_ref.leader == inviter, 201); // Only team leader can invite
+      
+      // Check if the invited hacker already exists
+      let hackers_mut = borrow_global_mut<Hackers>(@hackerOne);
+      assert!(table::contains<address, Hacker>(&hackers_mut.hackers, invited_hacker), 202);
+      
+      // Check if the hacker is not already in the team
+      assert!(!vector::contains(&team_ref.members, &invited_hacker), 203);
+      
+      // Retrieve the invited hacker's profile
+      let hacker_ref = table::borrow_mut<address, Hacker>(&mut hackers_mut.hackers, invited_hacker);
+      
+      // Add team invitation to the hacker's invites
+      vector::push_back(&mut hacker_ref.teamInvites, team_id);
+   }
+
+   public entry fun acceptTeamInvite(
+    account: &signer, 
+    team_id: u64
+) acquires Teams, Hackers {
+    let addr = signer::address_of(account);
+    
+    // Verify the hacker exists
+    let hackers_mut = borrow_global_mut<Hackers>(@hackerOne);
+    assert!(table::contains<address, Hacker>(&hackers_mut.hackers, addr), 301);
+    
+    // Get the hacker's profile
+    let hacker_ref = table::borrow_mut<address, Hacker>(&mut hackers_mut.hackers, addr);
+    
+    // Check if the team invite exists
+    let (exists, index) = vector::index_of(&hacker_ref.teamInvites, &team_id);
+    assert!(exists, 302); // Team invite not found
+    
+    // Remove the invite from the list
+    vector::remove(&mut hacker_ref.teamInvites, index);
+    
+    // Add the hacker to the team
+    let teams_mut = borrow_global_mut<Teams>(@hackerOne);
+    let team_ref = table::borrow_mut<u64, Team>(&mut teams_mut.teams, team_id);
+    
+    // Add hacker to team members
+    vector::push_back(&mut team_ref.members, addr);
+    
+    // Add team to hacker's joined teams
+    vector::push_back(&mut hacker_ref.teamsJoined, team_id);
+}
 
 }
