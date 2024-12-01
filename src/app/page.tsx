@@ -9,30 +9,29 @@ import { TransferAPT } from "@/components/TransferAPT";
 import { Card, CardContent } from "@/components/ui/card";
 import { WalletDetails } from "@/components/WalletDetails";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
-import { OktoProvider, BuildType } from "okto-sdk-react";
+import { BuildType, OktoProvider } from "okto-sdk-react";
 
-const OKTO_CLIENT_API_KEY = "10f73c94-d3f3-4008-99e1-300df58b155a";
+const OKTO_CLIENT_API_KEY = "bf3ad2a6-4dc7-4cd4-9f66-463588dd1828";
 export default function Home() {
   const { connected } = useWallet();
-  console.log({ okto: OKTO_CLIENT_API_KEY });
 
   return (
-    <PageContainer header={<Header />}>
-      {connected ? (
-        <Card>
-          <CardContent className="flex flex-col gap-10 pt-6">
-            <WalletDetails />
-            <NetworkInfo />
-            <AccountInfo />
-            <TransferAPT />
-            <MessageBoard />
-          </CardContent>
-        </Card>
-      ) : (
-        <OktoProvider apiKey={OKTO_CLIENT_API_KEY} buildType={BuildType.SANDBOX}>
+    <OktoProvider apiKey={OKTO_CLIENT_API_KEY} buildType={BuildType.SANDBOX}>
+      <PageContainer header={<Header />}>
+        {connected ? (
+          <Card>
+            <CardContent className="flex flex-col gap-10 pt-6">
+              <WalletDetails />
+              <NetworkInfo />
+              <AccountInfo />
+              <TransferAPT />
+              <MessageBoard />
+            </CardContent>
+          </Card>
+        ) : (
           <HomeHero />
-        </OktoProvider>
-      )}
-    </PageContainer>
+        )}
+      </PageContainer>
+    </OktoProvider>
   );
 }

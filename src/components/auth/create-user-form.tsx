@@ -19,6 +19,7 @@ export default function CreateUserForm() {
         fullName: "",
         email: "",
         phone: "",
+        profilePicture: "",
       },
       professionalDetails: {
         githubProfile: "",
@@ -53,7 +54,7 @@ export default function CreateUserForm() {
   ];
 
   return (
-    <div className="w-full shadow-lg rounded-xl max-w-[900px]">
+    <div className="w-full rounded-xl max-w-[900px]">
       <div className="flex w-full bg-white rounded-lg">
         <StepNav currentStep={step} />
         <main className="p-6 lg:p-8 w-[600px]">
