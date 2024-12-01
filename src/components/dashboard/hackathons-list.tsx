@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { BackgroundGradient } from "../shared";
+import Typography from "../ui/typography";
 
 interface Hackathon {
   id: number;
@@ -90,18 +91,18 @@ export default function HackathonsList() {
     <div className="space-y-6">
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {hackathons.map((hackathon) => (
-          <Card key={hackathon.id}>
-            <CardHeader>
-              <CardTitle>{hackathon.title}</CardTitle>
-              <CardDescription>{hackathon.date}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p>{hackathon.description}</p>
-            </CardContent>
-            <CardFooter>
-              <p className="text-sm text-muted-foreground">{hackathon.participants} participants</p>
-            </CardFooter>
-          </Card>
+          <BackgroundGradient key={hackathon.id} className="rounded-[22px] max-w-sm p-4 sm:p-10 dark:bg-zinc-900">
+            <Typography variant="h2" weight="bold" className="text-white">
+              {hackathon.title}
+            </Typography>
+            <p className="mt-4 mb-2 text-base text-black sm:text-xl dark:text-neutral-200">{hackathon.date}</p>
+
+            <p className="text-sm text-neutral-600 dark:text-neutral-400">{hackathon.description}</p>
+            <button className="flex items-center py-1 pl-4 pr-1 mt-4 space-x-1 text-xs font-bold text-white bg-black rounded-full dark:bg-zinc-800">
+              <span>{hackathon.participants} </span>
+              <span className="bg-zinc-700 rounded-full text-[0.6rem] px-2 py-0 text-white">Participants</span>
+            </button>
+          </BackgroundGradient>
         ))}
       </div>
       <div className="flex justify-center">

@@ -2,12 +2,38 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/comp
 import { Input } from "@/components/ui/input";
 import { UseFormReturn } from "react-hook-form";
 import { FormData } from "./form";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { X } from "lucide-react";
 
 interface PersonalInfoStepProps {
   form: UseFormReturn<FormData>;
 }
 
 export function PersonalInfoStep({ form }: PersonalInfoStepProps) {
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+
+  const handleImageUpload = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    field: { onChange: (value: string) => void },
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const result = reader.result as string;
+        setPreviewImage(result);
+        field.onChange(result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeImage = (field: { onChange: (value: string) => void }) => {
+    setPreviewImage(null);
+    field.onChange("");
+  };
   return (
     <div className="space-y-6">
       <div>
@@ -48,6 +74,50 @@ export function PersonalInfoStep({ form }: PersonalInfoStepProps) {
             <FormLabel>Phone Number</FormLabel>
             <FormControl>
               <Input placeholder="e.g. +1 234 567 890" type="tel" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="personalInfo.profilePicture"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Profile Picture</FormLabel>
+            <FormControl>
+              <div className="flex items-center space-x-4">
+                <Avatar className="w-20 h-20">
+                  <AvatarImage src={previewImage || ""} alt="Profile picture" />
+                  <AvatarFallback>{form.getValues("personalInfo.fullName")?.charAt(0) || "U"}</AvatarFallback>
+                </Avatar>
+                <div className="flex flex-col space-y-2">
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleImageUpload(e, field)}
+                    className="hidden"
+                    id="profile-picture-upload"
+                  />
+                  <label htmlFor="profile-picture-upload">
+                    <Button type="button" variant="outline" asChild>
+                      <span>Upload Image</span>
+                    </Button>
+                  </label>
+                  {previewImage && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => removeImage(field)}
+                      className="flex items-center"
+                    >
+                      <X className="w-4 h-4 mr-2" />
+                      Remove
+                    </Button>
+                  )}
+                </div>
+              </div>
             </FormControl>
             <FormMessage />
           </FormItem>
