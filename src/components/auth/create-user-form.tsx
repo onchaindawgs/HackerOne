@@ -8,9 +8,11 @@ import { Form } from "@/components/ui/form";
 import { StepNav } from "./step-nav";
 import { PersonalInfoStep, ProfessionalDetailsStep, SkillsStep, PreferencesStep } from "./steps";
 import { FormData, formSchema } from "./steps/form";
+import { useAppStore } from "@/store/store";
 
 export default function CreateUserForm() {
   const [step, setStep] = useState(1);
+  const { setIsUserProfileCompleted } = useAppStore((state) => state);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -70,7 +72,9 @@ export default function CreateUserForm() {
                     Next Step
                   </Button>
                 ) : (
-                  <Button type="submit">Confirm</Button>
+                  <Button type="submit" onClick={() => setIsUserProfileCompleted(true)}>
+                    Confirm
+                  </Button>
                 )}
               </div>
             </form>

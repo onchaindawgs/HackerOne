@@ -1,23 +1,19 @@
 "use client";
-import React, { useState } from "react";
-import { MenuIcon } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { LogOut, MenuIcon } from "lucide-react";
 
 import Link from "next/link";
 
 import Logo from "./logo";
 import Typography from "../ui/typography";
 
-import { WalletSelector } from "../WalletSelector";
 import { ExecuteRawTransactionData, useOkto, WalletData } from "okto-sdk-react";
 import { GoogleLogin } from "@react-oauth/google";
 import { Button } from "../ui/button";
 import { useAppStore } from "@/store/store";
+import { useRouter } from "next/navigation";
 
 const navLinks = [
-  {
-    title: "Dashboard",
-    href: "/dashboard",
-  },
   { title: "Create Profile", href: "/create-profile" },
   {
     title: "Hacker",
@@ -26,14 +22,15 @@ const navLinks = [
 ];
 
 export default function Header() {
+  const router = useRouter();
   const oktoContext = useOkto();
   const authenticate = oktoContext?.authenticate;
-  const [authToken, setAuthToken] = useState(null);
   const [transferData, setTransferData] = useState({
     network_name: "",
     transaction: "",
   });
-  const { setIsCreateHakathonModalOpen } = useAppStore((state) => state);
+  const { setIsCreateHakathonModalOpen, isUserProfileCompleted, setIsUserProfileCompleted, authToken, setAuthToken } =
+    useAppStore((state) => state);
   const [userDetails, setUserDetails] = useState(null);
   const [portfolioData, setPortfolioData] = useState(null);
   const [wallets, setWallets] = useState<WalletData | null>(null);
@@ -100,10 +97,7 @@ export default function Header() {
     authenticate &&
       authenticate(idToken, async (authResponse, error) => {
         if (authResponse) {
-          console.log("Authentication check: ", authResponse);
           setAuthToken(authResponse.auth_token);
-          console.log("auth token received", authToken);
-          alert("Authenticated successfully");
         }
         if (error) {
           console.error("Authentication error:", error);
@@ -111,10 +105,23 @@ export default function Header() {
       });
   };
 
-  const onLogoutClick = () => {
-    alert("Logout successful");
+  const handleLogout = () => {
+    setAuthToken(null);
+    router.push("/");
   };
 
+  useEffect(() => {
+    if (authToken) {
+      debugger;
+      if (!isUserProfileCompleted) {
+        router.push("/create-profile");
+      } else {
+        router.push("/dashboard");
+      }
+    } else {
+      router.push("/");
+    }
+  }, [authToken, isUserProfileCompleted]);
   return (
     <header
       className={`flex justify-center w-full transition-all duration-500 ease-in-out z-[9999] lg:h-[92px] sm:h-[68px] h-[56px] px-4 py-4 sm:px-5 sm:py-5 lg:px-8 lg:py-6 translate-y-0`}
@@ -124,17 +131,31 @@ export default function Header() {
           <Logo />
         </div>
         <div className="hidden gap-6 lg:flex">
-          <nav className="flex items-center gap-6">
-            {navLinks.map((link) => (
-              <Link key={link.href} href={link.href} className={`text-sm font-medium hover:text-primary`}>
-                <Typography variant="p2" className={`font-bold text-white hover:text-primary`}>
-                  {link.title}
-                </Typography>
-              </Link>
-            ))}
-          </nav>
-          <Button onClick={() => setIsCreateHakathonModalOpen(true)}>Create Hackathon</Button>
-          {!authToken ? (
+          {authToken ? (
+            isUserProfileCompleted ? (
+              <div className="flex gap-2">
+                <nav className="flex items-center gap-6">
+                  {navLinks.map((link) => (
+                    <Link key={link.href} href={link.href} className={`text-sm font-medium hover:text-primary`}>
+                      <Typography variant="p2" className={`font-bold text-white hover:text-primary`}>
+                        {link.title}
+                      </Typography>
+                    </Link>
+                  ))}
+                </nav>
+                <Button onClick={() => setIsCreateHakathonModalOpen(true)}>Create Hackathon</Button>
+                <Button onClick={handleLogout} variant={"destructive"}>
+                  <LogOut />
+                </Button>
+              </div>
+            ) : (
+              <Button onClick={handleLogout}>Logout</Button>
+            )
+          ) : (
+            <GoogleLogin onSuccess={handleGoogleLogin} onError={() => console.error("Login Failed")} />
+          )}
+
+          {/* {!authToken ? (
             <GoogleLogin onSuccess={handleGoogleLogin} onError={() => console.error("Login Failed")} />
           ) : (
             <div className="flex gap-4">
@@ -144,23 +165,7 @@ export default function Header() {
               <Button onClick={fetchWallets}>View Wallet</Button>
               <Button onClick={handleRawTxnExecute}>Execute Raw Transaction</Button>
             </div>
-          )}
-
-          {activeSection === "wallets" && wallets && (
-            <div className="flex flex-col gap-2">
-              <h2>Wallets:</h2>
-            </div>
-          )}
-          {error && (
-            <div style={{ color: "red" }}>
-              <h2>Error:</h2>
-              <p>{error}</p>
-            </div>
-          )}
-          <WalletSelector />
-        </div>
-        <div className="block lg:hidden">
-          <MenuIcon className="cursor-pointer" />
+          )} */}
         </div>
       </div>
     </header>
