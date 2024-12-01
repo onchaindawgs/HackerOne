@@ -1,7 +1,6 @@
 "use client";
 
 import { AccountInfo } from "@/components/AccountInfo";
-import { BusinessCategories, Cta, FeaturesPlanet, LargeTestimonial } from "@/components/home";
 import HomeHero from "@/components/home/home-hero";
 import { MessageBoard } from "@/components/MessageBoard";
 import { NetworkInfo } from "@/components/NetworkInfo";
@@ -26,10 +25,6 @@ export default function Home() {
       ) : (
         <>
           <HomeHero />
-          <BusinessCategories />
-          <FeaturesPlanet />
-          <LargeTestimonial />
-          <Cta />
         </>
       )}
     </>

@@ -14,6 +14,10 @@ module.exports = {
       },
     },
     extend: {
+      backgroundClip: ['text'],
+      backgroundImage: {
+        'text-gradient': 'linear-gradient(90deg, #ff7a18, #af002d, #319197)',
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
