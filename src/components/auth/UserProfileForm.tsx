@@ -11,11 +11,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { uploadToArweave } from "@/utils/UploadToArweave";
 
 const formSchema = z.object({
   fullName: z.string().min(2, {
     message: "Full name must be at least 2 characters.",
   }),
+  image: z.string().optional(),
   tagline: z.string().max(100, {
     message: "Tagline must not exceed 100 characters.",
   }),
@@ -59,11 +61,14 @@ const formSchema = z.object({
 
 export default function UserProfileForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [imageHash, setImageHash] = useState<string | null>(null); // Store image hash
+  const [imageUrl, setImageUrl] = useState<string | null>(null); // Store image URL
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       fullName: "",
+      image: "",
       tagline: "",
       aboutMe: "",
       githubProfile: "",
@@ -94,7 +99,7 @@ export default function UserProfileForm() {
   }
 
   return (
-    <div className="container p-4 mx-auto mt-24">
+    <div className="container p-4 mx- auto mt-24">
       <Card className="w-full max-w-4xl mx-auto">
         <CardHeader>
           <CardTitle>Create Your Developer Profile</CardTitle>
@@ -117,6 +122,72 @@ export default function UserProfileForm() {
                   </FormItem>
                 )}
               />
+              
+              <FormField
+                control={form.control}
+                name="image"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Upload Image</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            try {
+                              const hash = await uploadToArweave(file);  // This is your updated upload function with headers
+                              if (hash !== "error") {
+                                const imageUrl = `https://arweave.net/${hash}`;
+                                setImageHash(hash);  // Store the hash
+                                setImageUrl(imageUrl);  // Store the image URL to display it in the UI
+                        
+                                form.setValue("image", hash);  // Set the value of image in the form
+                                toast({
+                                  title: "Image Uploaded!",
+                                  description: `Arweave Transaction ID: ${hash}`,
+                                });
+                        
+                              } else {
+                                toast({
+                                  title: "Upload Error",
+                                  description: "Failed to upload the image to Arweave.",
+                                  variant: "destructive",
+                                });
+                              }
+                            } catch (error) {
+                              toast({
+                                title: "Upload Error",
+                                description: "An unexpected error occurred.",
+                                variant: "destructive",
+                              });
+                            }
+                          }
+                        }
+                      }
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Display Image and Hash */}
+              {imageUrl && (
+                <div className="mt-4">
+                  <p>Uploaded Image:</p>
+                  <img src={imageUrl} alt="Uploaded" width={200} className="my-2" />
+                  <p>
+                    Arweave Transaction Hash:{" "}
+                    <a href={`https://arweave.net/${imageHash}`} target="_blank" rel="noopener noreferrer">
+                      {imageHash}
+                    </a>
+                  </p>
+                </div>
+                
+              )}
+
               <FormField
                 control={form.control}
                 name="tagline"

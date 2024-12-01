@@ -10,7 +10,7 @@ export async function uploadToArweave(file: File) {
         "Content-Type": "multipart/form-data", 
       },
     });
-
+    console.log(response)
     return response.status === 200 ? response.data.hash : "error";
   } catch (error) {
     console.error("Error uploading to Arweave:", error);
