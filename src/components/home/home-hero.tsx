@@ -1,12 +1,11 @@
 import React from "react";
 import { FlipWords } from "./flip-words";
-import { BackgroundBeams } from "./background-beams";
 import { ArrowRight } from "lucide-react";
 import Typography from "../ui/typography";
 
 export default function HomeHero() {
   return (
-    <div className="relative flex flex-col items-center justify-center w-full h-screen gap-4 bg-black dark:bg-black">
+    <div className="relative flex flex-col items-center justify-center w-full h-screen gap-4">
       {/* <HeroSection /> */}
       <div className="flex flex-col gap-4">
         <Typography variant="h1" weight="bold" className="text-center text-white">
@@ -22,7 +21,7 @@ export default function HomeHero() {
         </div>
       </div>
 
-      <BackgroundBeams />
+      {/* <BackgroundBeams /> */}
       <div className="flex bg-white">
         <div className="relative flex h-[324px] items-center justify-center">
           {/* Logos */}

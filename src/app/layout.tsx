@@ -6,6 +6,7 @@ import { WalletProvider } from "@/components/WalletProvider";
 import { Toaster } from "@/components/ui/toaster";
 import { WrongNetworkAlert } from "@/components/WrongNetworkAlert";
 import localFont from "next/font/local";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 import "./globals.css";
 
@@ -29,12 +30,17 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
+  const GOOGLE_CLIENT_ID = "1051020883677-43q1s4t2reh46t2odpe3oivu3lkrhd73.apps.googleusercontent.com";
+  debugger;
+  console.log({ gid: GOOGLE_CLIENT_ID });
   return (
     <html lang="en" className="scroll-smooth">
       <body className={`${satoshi.variable} ${satoshiItalic.variable} font-sans antialiased`}>
         <WalletProvider>
           <ReactQueryProvider>
-            <div id="root">{children}</div>
+            <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+              <div id="root">{children}</div>
+            </GoogleOAuthProvider>
             <WrongNetworkAlert />
             <Toaster />
           </ReactQueryProvider>
