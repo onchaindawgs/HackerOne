@@ -5,9 +5,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import HackathonsList from "@/components/dashboard/hackathons-list";
 import BuildersList from "@/components/dashboard/builders-list";
 import { Header, PageContainer, SectionContainer } from "@/components/layout";
+import { CreateHackathonModal } from "@/components/create-hackathon";
+import { useAppStore } from "@/store/store";
 
 export default function DeveloperDashboard() {
   const [activeTab, setActiveTab] = useState("hackathons");
+  const { isCreateHakathonModalOpen, setIsCreateHakathonModalOpen } = useAppStore((state) => state);
 
   return (
     <PageContainer header={<Header />}>
@@ -26,6 +29,9 @@ export default function DeveloperDashboard() {
           </TabsContent>
         </Tabs>
       </SectionContainer>
+      <div className="overflow-scroll">
+        <CreateHackathonModal isOpen={isCreateHakathonModalOpen} onClose={() => setIsCreateHakathonModalOpen(false)} />
+      </div>
     </PageContainer>
   );
 }

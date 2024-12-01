@@ -27,6 +27,7 @@ import { useCallback, useState } from "react";
 
 export function WalletSelector() {
   const { account, connected, disconnect, wallet } = useWallet();
+
   const { toast } = useToast();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
