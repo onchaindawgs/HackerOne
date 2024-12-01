@@ -6,6 +6,7 @@ module.exports = {
   content: ["./src/**/*.{ts,tsx}"],
   prefix: "",
   theme: {
+
     container: {
       center: true,
       padding: "2rem",
@@ -74,8 +75,11 @@ module.exports = {
         "accordion-up": "accordion-up 0.2s ease-out",
       },
       fontFamily: {
-        sans: ["sans-serif"],
-        inter: ["Inter", "sans-serif"],
+        sans: [
+          "var(--font-satoshi)",
+          "var(--font-satoshi-italic)",
+          "sans-serif",
+        ],
       },
       fontSize: {
         12: "0.75rem",
