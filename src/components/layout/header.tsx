@@ -8,7 +8,7 @@ import Logo from "./logo";
 import Typography from "../ui/typography";
 
 import { WalletSelector } from "../WalletSelector";
-import { useOkto, WalletData } from "okto-sdk-react";
+import { ExecuteRawTransactionData, useOkto, WalletData } from "okto-sdk-react";
 import { GoogleLogin } from "@react-oauth/google";
 import { Button } from "../ui/button";
 import { useAppStore } from "@/store/store";
@@ -29,7 +29,20 @@ export default function Header() {
   const oktoContext = useOkto();
   const authenticate = oktoContext?.authenticate;
   const [authToken, setAuthToken] = useState(null);
-
+  const [transferData, setTransferData] = useState({
+    network_name: "",
+    transaction: "",
+  });
+  const { setIsCreateHakathonModalOpen } = useAppStore((state) => state);
+  const [userDetails, setUserDetails] = useState(null);
+  const [portfolioData, setPortfolioData] = useState(null);
+  const [wallets, setWallets] = useState<WalletData | null>(null);
+  const [transferResponse, setTransferResponse] = useState<ExecuteRawTransactionData | null>(null);
+  const [orderResponse, setOrderResponse] = useState(null);
+  const [error, setError] = useState<string | null>(null);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+  const executeRawTransaction = oktoContext?.executeRawTransaction;
+  const getRawTransactionStatus = oktoContext?.getRawTransactionStatus;
   const createWallet = oktoContext?.createWallet;
   const fetchWallets = async () => {
     try {
@@ -50,6 +63,35 @@ export default function Header() {
     }
   };
 
+  const handleRawTxnExecute = async (e: { preventDefault: () => void }) => {
+    console.log("handling exe");
+    e.preventDefault();
+    try {
+      console.log("transferData: ", transferData);
+      console.log({ wallets });
+
+      const rawData = {
+        //@ts-expect-error not known
+        network_name: wallets?.[1]?.network_name || "APTOS_TESTNET",
+        transaction: JSON.parse(transferData.transaction),
+      };
+      console.log("rawdata: ", rawData);
+      if (executeRawTransaction) {
+        const response = await executeRawTransaction(rawData);
+        setTransferResponse(response);
+        setActiveSection("transferResponse");
+      } else {
+        setError("executeRawTransaction function is not defined");
+      }
+      console.log("execting: ");
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(`Failed to transfer tokens: ${error.message}`);
+      } else {
+        setError("Failed to transfer tokens: Unknown error");
+      }
+    }
+  };
   //@ts-expect-error not known
   const handleGoogleLogin = async (credentialResponse) => {
     console.log("Google login response:", credentialResponse);
@@ -72,14 +114,7 @@ export default function Header() {
   const onLogoutClick = () => {
     alert("Logout successful");
   };
-  const { setIsCreateHakathonModalOpen } = useAppStore((state) => state);
-  const [userDetails, setUserDetails] = useState(null);
-  const [portfolioData, setPortfolioData] = useState(null);
-  const [wallets, setWallets] = useState<WalletData | null>(null);
-  const [transferResponse, setTransferResponse] = useState(null);
-  const [orderResponse, setOrderResponse] = useState(null);
-  const [error, setError] = useState<string | null>(null);
-  const [activeSection, setActiveSection] = useState<string | null>(null);
+
   return (
     <header
       className={`flex justify-center w-full transition-all duration-500 ease-in-out z-[9999] lg:h-[92px] sm:h-[68px] h-[56px] px-4 py-4 sm:px-5 sm:py-5 lg:px-8 lg:py-6 translate-y-0`}
@@ -107,13 +142,13 @@ export default function Header() {
                 Logout
               </Button>
               <Button onClick={fetchWallets}>View Wallet</Button>
+              <Button onClick={handleRawTxnExecute}>Execute Raw Transaction</Button>
             </div>
           )}
 
           {activeSection === "wallets" && wallets && (
-            <div>
+            <div className="flex flex-col gap-2">
               <h2>Wallets:</h2>
-              <pre>{JSON.stringify(wallets, null, 2)}</pre>
             </div>
           )}
           {error && (
