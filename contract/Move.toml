@@ -4,7 +4,7 @@ version = "1.0.0"
 authors = []
 
 [addresses]
-hackerOne = "c36a72f1ef8b723624bf9801c98d3f17ddf492266a508a9986f516d10f4dd464"
+hackerOne = "66ea55b1e3e6e68036f37b626de162015ca946ef60fae41d65ffcd2b649e401c"
 
 [dependencies]
 AptosFramework = { git = "https://github.com/aptos-labs/aptos-core.git", rev = "mainnet", subdir = "aptos-move/framework/aptos-framework" }

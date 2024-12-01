@@ -14,7 +14,7 @@ module hackerOne::HackerOneCore {
 }
 
    struct Hackers has key{
-      hackers : Table<address,Hacker>,
+      hackers: Table<address, Hacker>,
       count: u64,
    }
 
@@ -75,28 +75,15 @@ module hackerOne::HackerOneCore {
          teamsJoined: vector::empty<u64>(),
          devScore,
       };
-      table::add<address, Hacker>(&mut borrow_global_mut<Hackers>(@hackerOne).hackers, addr, hacker);
+      let hackers_mut = borrow_global_mut<Hackers>(@hackerOne);
+      table::add(&mut hackers_mut.hackers, addr, hacker);
+      hackers_mut.count = hackers_mut.count + 1;
       }
 
       #[view]
-      public fun getHackers(addrs: vector<address>) : vector<Hacker> acquires Hackers {
-      let result = vector::empty<Hacker>();
-      let len = vector::length(&addrs);
-      let i = 0;
-
-      while (i < len) {
-         let addr = *vector::borrow(&addrs, i);
-         
-         // Check if the hacker profile exists
-         if (table::contains<address, Hacker>(&borrow_global<Hackers>(@hackerOne).hackers, addr)) {
-               let hacker = table::borrow<address, Hacker>(&borrow_global<Hackers>(@hackerOne).hackers, addr);
-               vector::push_back(&mut result, *hacker);
-         };
-
-         i = i + 1;
-      };
-
-      result
+   public fun getHacker(addr : address) : Hacker acquires Hackers {
+         assert!(table::contains<address, Hacker>(&borrow_global<Hackers>(@hackerOne).hackers, addr), 112) ;
+         *table::borrow<address, Hacker>(&borrow_global<Hackers>(@hackerOne).hackers, addr)
    }
 
    public entry fun CreateHackathon(account : &signer,  name: String, description : String, prizePool : u64 ) acquires Hackathons{
@@ -223,5 +210,19 @@ module hackerOne::HackerOneCore {
     // Add team to hacker's joined teams
     vector::push_back(&mut hacker_ref.teamsJoined, team_id);
 }
+
+   // #[view]
+   // public fun getAllHackers(): vector<Hacker> acquires Hackers {
+   //    let hackers_resource = borrow_global<Hackers>(@hackerOne);
+   //    let all_addresses = simple_map::keys(&hackers_resource.hackers);
+   //    getHackers(all_addresses)
+   // }
+
+// #[view]
+// public fun getAllHackers(): vector<Hacker> acquires Hackers {
+//     let hackers_resource = borrow_global<Hackers>(@hackerOne);
+//     let all_addresses =(&hackers_resource.hackers);
+//     getHackers(all_addresses)
+// }
 
 }
