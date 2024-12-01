@@ -1,17 +1,7 @@
 // Internal components
 import { Button } from "@/components/ui/button";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,14 +22,7 @@ import {
   truncateAddress,
   useWallet,
 } from "@aptos-labs/wallet-adapter-react";
-import {
-  ArrowLeft,
-  ArrowRight,
-  ChevronDown,
-  Copy,
-  LogOut,
-  User,
-} from "lucide-react";
+import { ArrowLeft, ArrowRight, ChevronDown, Copy, LogOut, User } from "lucide-react";
 import { useCallback, useState } from "react";
 
 export function WalletSelector() {
@@ -69,28 +52,21 @@ export function WalletSelector() {
   return connected ? (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button>
-          {account?.ansName || truncateAddress(account?.address) || "Unknown"}
-        </Button>
+        <Button>{account?.ansName || truncateAddress(account?.address) || "Unknown"}</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onSelect={copyAddress} className="gap-2">
-          <Copy className="h-4 w-4" /> Copy address
+          <Copy className="w-4 h-4" /> Copy address
         </DropdownMenuItem>
         {wallet && isAptosConnectWallet(wallet) && (
           <DropdownMenuItem asChild>
-            <a
-              href={APTOS_CONNECT_ACCOUNT_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex gap-2"
-            >
-              <User className="h-4 w-4" /> Account
+            <a href={APTOS_CONNECT_ACCOUNT_URL} target="_blank" rel="noopener noreferrer" className="flex gap-2">
+              <User className="w-4 h-4" /> Account
             </a>
           </DropdownMenuItem>
         )}
         <DropdownMenuItem onSelect={disconnect} className="gap-2">
-          <LogOut className="h-4 w-4" /> Disconnect
+          <LogOut className="w-4 h-4" /> Disconnect
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -110,8 +86,7 @@ interface ConnectWalletDialogProps {
 
 function ConnectWalletDialog({ close }: ConnectWalletDialogProps) {
   const { wallets = [] } = useWallet();
-  const { aptosConnectWallets, availableWallets, installableWallets } =
-    groupAndSortWallets(wallets);
+  const { aptosConnectWallets, availableWallets, installableWallets } = groupAndSortWallets(wallets);
 
   const hasAptosConnectWallets = !!aptosConnectWallets.length;
 
@@ -119,7 +94,7 @@ function ConnectWalletDialog({ close }: ConnectWalletDialogProps) {
     <DialogContent className="max-h-screen overflow-auto">
       <AboutAptosConnect renderEducationScreen={renderEducationScreen}>
         <DialogHeader>
-          <DialogTitle className="flex flex-col text-center leading-snug">
+          <DialogTitle className="flex flex-col leading-snug text-center">
             {hasAptosConnectWallets ? (
               <>
                 <span>Log in or sign up</span>
@@ -134,30 +109,26 @@ function ConnectWalletDialog({ close }: ConnectWalletDialogProps) {
         {hasAptosConnectWallets && (
           <div className="flex flex-col gap-2 pt-3">
             {aptosConnectWallets.map((wallet) => (
-              <AptosConnectWalletRow
-                key={wallet.name}
-                wallet={wallet}
-                onConnect={close}
-              />
+              <AptosConnectWalletRow key={wallet.name} wallet={wallet} onConnect={close} />
             ))}
-            <p className="flex gap-1 justify-center items-center text-muted-foreground text-sm">
+            <p className="flex items-center justify-center gap-1 text-sm text-muted-foreground">
               Learn more about{" "}
-              <AboutAptosConnect.Trigger className="flex gap-1 py-3 items-center text-foreground">
+              <AboutAptosConnect.Trigger className="flex items-center gap-1 py-3 text-foreground">
                 Aptos Connect <ArrowRight size={16} />
               </AboutAptosConnect.Trigger>
             </p>
             <AptosPrivacyPolicy className="flex flex-col items-center py-1">
               <p className="text-xs leading-5">
                 <AptosPrivacyPolicy.Disclaimer />{" "}
-                <AptosPrivacyPolicy.Link className="text-muted-foreground underline underline-offset-4" />
+                <AptosPrivacyPolicy.Link className="underline text-muted-foreground underline-offset-4" />
                 <span className="text-muted-foreground">.</span>
               </p>
               <AptosPrivacyPolicy.PoweredBy className="flex gap-1.5 items-center text-xs leading-5 text-muted-foreground" />
             </AptosPrivacyPolicy>
             <div className="flex items-center gap-3 pt-4 text-muted-foreground">
-              <div className="h-px w-full bg-secondary" />
+              <div className="w-full h-px bg-secondary" />
               Or
-              <div className="h-px w-full bg-secondary" />
+              <div className="w-full h-px bg-secondary" />
             </div>
           </div>
         )}
@@ -175,11 +146,7 @@ function ConnectWalletDialog({ close }: ConnectWalletDialogProps) {
               </CollapsibleTrigger>
               <CollapsibleContent className="flex flex-col gap-3">
                 {installableWallets.map((wallet) => (
-                  <WalletRow
-                    key={wallet.name}
-                    wallet={wallet}
-                    onConnect={close}
-                  />
+                  <WalletRow key={wallet.name} wallet={wallet} onConnect={close} />
                 ))}
               </CollapsibleContent>
             </Collapsible>
@@ -200,10 +167,10 @@ function WalletRow({ wallet, onConnect }: WalletRowProps) {
     <WalletItem
       wallet={wallet}
       onConnect={onConnect}
-      className="flex items-center justify-between px-4 py-3 gap-4 border rounded-md"
+      className="flex items-center justify-between gap-4 px-4 py-3 border rounded-md"
     >
       <div className="flex items-center gap-4">
-        <WalletItem.Icon className="h-6 w-6" />
+        <WalletItem.Icon className="w-6 h-6" />
         <WalletItem.Name className="text-base font-normal" />
       </div>
       {isInstallRequired(wallet) ? (
@@ -224,7 +191,7 @@ function AptosConnectWalletRow({ wallet, onConnect }: WalletRowProps) {
     <WalletItem wallet={wallet} onConnect={onConnect}>
       <WalletItem.ConnectButton asChild>
         <Button size="lg" variant="outline" className="w-full gap-4">
-          <WalletItem.Icon className="h-5 w-5" />
+          <WalletItem.Icon className="w-5 h-5" />
           <WalletItem.Name className="text-base font-normal" />
         </Button>
       </WalletItem.ConnectButton>
@@ -239,26 +206,19 @@ function renderEducationScreen(screen: AboutAptosConnectEducationScreen) {
         <Button variant="ghost" size="icon" onClick={screen.cancel}>
           <ArrowLeft />
         </Button>
-        <DialogTitle className="leading-snug text-base text-center">
-          About Aptos Connect
-        </DialogTitle>
+        <DialogTitle className="text-base leading-snug text-center">About Aptos Connect</DialogTitle>
       </DialogHeader>
 
       <div className="flex h-[162px] pb-3 items-end justify-center">
         <screen.Graphic />
       </div>
-      <div className="flex flex-col gap-2 text-center pb-4">
+      <div className="flex flex-col gap-2 pb-4 text-center">
         <screen.Title className="text-xl" />
         <screen.Description className="text-sm text-muted-foreground [&>a]:underline [&>a]:underline-offset-4 [&>a]:text-foreground" />
       </div>
 
-      <div className="grid grid-cols-3 items-center">
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={screen.back}
-          className="justify-self-start"
-        >
+      <div className="grid items-center grid-cols-3">
+        <Button size="sm" variant="ghost" onClick={screen.back} className="justify-self-start">
           Back
         </Button>
         <div className="flex items-center gap-2 place-self-center">
@@ -268,12 +228,7 @@ function renderEducationScreen(screen: AboutAptosConnectEducationScreen) {
             </ScreenIndicator>
           ))}
         </div>
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={screen.next}
-          className="gap-2 justify-self-end"
-        >
+        <Button size="sm" variant="ghost" onClick={screen.next} className="gap-2 justify-self-end">
           {screen.screenIndex === screen.totalScreens - 1 ? "Finish" : "Next"}
           <ArrowRight size={16} />
         </Button>
