@@ -8,7 +8,6 @@ module hackerOne::HackerOneCore {
     addr : address,
     dataHash: String,
     pastHackathons : vector<u64>,
-    remark: String,
     devScore: u64,
    }
 
@@ -47,7 +46,7 @@ module hackerOne::HackerOneCore {
    }
 
    struct HackathoTeamsMap has key {
-      hackathonTeams : Table<u64, u64>
+      hackathonTeams : Table<u64, vector<u64>>
    }
 
    fun init_module(account: &signer) {
@@ -60,17 +59,16 @@ module hackerOne::HackerOneCore {
          count: 0
       });
       move_to(account, HackathoTeamsMap{
-         hackathonTeams : table::new<u64, u64>()
+         hackathonTeams : table::new<u64, vector<u64>>()
       })
    }
 
-   public entry fun createHackerProfile(account: &signer, dataHash : String, remark : String, devScore : u64) acquires Hackers{
+   public entry fun createHackerProfile(account: &signer, dataHash : String, devScore : u64) acquires Hackers{
       let addr = signer::address_of(account);
       let hacker = Hacker{
          addr,
          dataHash,
          pastHackathons : vector::empty<u64>(),
-         remark: remark,
          devScore,
       };
       table::add<address, Hacker>(&mut borrow_global_mut<Hackers>(@hackerOne).hackers, addr, hacker);
@@ -134,20 +132,35 @@ module hackerOne::HackerOneCore {
     assert!(!vector::contains(&hackathon_ref.approvedParticipants, &addr), 102);
     
     vector::push_back(&mut hackathon_ref.pendingRequests, addr);
-}
+   }
 
-public entry fun approveHackathonRequest(account: &signer, hackathon_id: u64, participant: address) acquires Hackathons {
-    let hackathons_mut = borrow_global_mut<Hackathons>(@hackerOne);
-    let hackathon_ref = table::borrow_mut<u64, Hackathon>(&mut hackathons_mut.allHackathons, hackathon_id);
-    
-    let creator = hackathon_ref.creator;
-    assert!(signer::address_of(account) == creator, 103); 
-    
-    let (exists, index) = vector::index_of(&hackathon_ref.pendingRequests, &participant);
-    assert!(exists == true, 104);
-    vector::remove(&mut hackathon_ref.pendingRequests, index);
-    
-    vector::push_back(&mut hackathon_ref.approvedParticipants, participant);
-}
+   public entry fun approveHackathonRequest(account: &signer, hackathon_id: u64, participant: address) acquires Hackathons {
+      let hackathons_mut = borrow_global_mut<Hackathons>(@hackerOne);
+      let hackathon_ref = table::borrow_mut<u64, Hackathon>(&mut hackathons_mut.allHackathons, hackathon_id);
+      
+      let creator = hackathon_ref.creator;
+      assert!(signer::address_of(account) == creator, 103); 
+      
+      let (exists, index) = vector::index_of(&hackathon_ref.pendingRequests, &participant);
+      assert!(exists == true, 104);
+      vector::remove(&mut hackathon_ref.pendingRequests, index);
+      
+      vector::push_back(&mut hackathon_ref.approvedParticipants, participant);
+   }
+   
+   public entry fun createTeam(account: &signer, name: String, hackathon_id : u64) acquires HackathoTeamsMap, Teams {
+      let leader = signer::address_of(account);
+      let teams_mut = borrow_global_mut<Teams>(@hackerOne);
+      teams_mut.curr_id = teams_mut.curr_id + 1;
+      let team_id = teams_mut.curr_id;
+      let team = Team{
+         id : team_id,
+         leader,
+         name,
+         members : vector::empty<address>()
+      };
+      table::add<u64, Team>(&mut teams_mut.teams, team_id, team);
+      vector::push_back(table::borrow_mut<u64, vector<u64>>(&mut borrow_global_mut<HackathoTeamsMap>(@hackerOne).hackathonTeams, hackathon_id), team_id)
+   }
 
 }
