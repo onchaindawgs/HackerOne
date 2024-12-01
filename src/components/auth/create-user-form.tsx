@@ -53,30 +53,28 @@ export default function CreateUserForm() {
   ];
 
   return (
-    <div className="flex items-center min-h-screen p-4 lg:p-8">
-      <div className="w-full bg-white shadow-lg rounded-xl">
-        <div className="flex w-full">
-          <StepNav currentStep={step} />
-          <main className="p-6 lg:p-8 w-[600px]">
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                {steps[step - 1]}
-                <div className="flex justify-between pt-8">
-                  <Button type="button" variant="outline" onClick={() => setStep(step - 1)} disabled={step === 1}>
-                    Go Back
+    <div className="w-full shadow-lg rounded-xl max-w-[900px]">
+      <div className="flex w-full bg-white rounded-lg">
+        <StepNav currentStep={step} />
+        <main className="p-6 lg:p-8 w-[600px]">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              {steps[step - 1]}
+              <div className="flex justify-between pt-8">
+                <Button type="button" variant="outline" onClick={() => setStep(step - 1)} disabled={step === 1}>
+                  Go Back
+                </Button>
+                {step < steps.length ? (
+                  <Button type="button" onClick={() => setStep(step + 1)}>
+                    Next Step
                   </Button>
-                  {step < steps.length ? (
-                    <Button type="button" onClick={() => setStep(step + 1)}>
-                      Next Step
-                    </Button>
-                  ) : (
-                    <Button type="submit">Confirm</Button>
-                  )}
-                </div>
-              </form>
-            </Form>
-          </main>
-        </div>
+                ) : (
+                  <Button type="submit">Confirm</Button>
+                )}
+              </div>
+            </form>
+          </Form>
+        </main>
       </div>
     </div>
   );

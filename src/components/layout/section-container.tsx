@@ -17,7 +17,7 @@ export default function SectionContainer(props: SectionContainerProps) {
   const { children, classNames = "", introduction, sectionBodyClassNames } = props;
   const { title, subtitle, textAlignment, classNames: classes } = introduction || {};
   return (
-    <section className={cn(`px-4 py-20 md:px-6 lg:px-8 lg:py-30 flex flex-col items-center`, classNames)}>
+    <section className={cn(`px-4 py-20 md:px-6 lg:px-8 lg:py-30 flex flex-col items-center bg-black`, classNames)}>
       <div className={cn(`flex flex-col gap-10 lg:gap-16 max-w-screen-xl items-center w-full`, sectionBodyClassNames)}>
         {introduction && (
           <div className={cn(`flex flex-col gap-4 w-full`, classes)}>
