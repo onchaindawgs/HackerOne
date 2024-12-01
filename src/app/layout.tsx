@@ -5,28 +5,33 @@ import { ReactQueryProvider } from "@/components/ReactQueryProvider";
 import { WalletProvider } from "@/components/WalletProvider";
 import { Toaster } from "@/components/ui/toaster";
 import { WrongNetworkAlert } from "@/components/WrongNetworkAlert";
+import localFont from "next/font/local";
 
 import "./globals.css";
 
-import { Inter } from "next/font/google";
+const satoshi = localFont({
+  src: "./fonts/Satoshi-Variable.ttf",
+  variable: "--font-satoshi",
+  weight: "400 700",
+});
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
+const satoshiItalic = localFont({
+  src: "./fonts/Satoshi-VariableItalic.ttf",
+  variable: "--font-satoshi-italic",
+  weight: "400 700",
 });
 
 export const metadata: Metadata = {
-  applicationName: "Aptos Boilerplate Template",
-  title: "NextJS Boilerplate Template",
-  description: "Aptos Boilerplate Template",
+  applicationName: "HackerOne",
+  title: "HackerOne",
+  description: "A platform where web3 hackers meet others web3 hackers",
   manifest: "/manifest.json",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={`${inter.variable} bg-gray-50 font-inter tracking-tight text-gray-900 antialiased`}>
+      <body className={`${satoshi.variable} ${satoshiItalic.variable} font-sans antialiased`}>
         <WalletProvider>
           <ReactQueryProvider>
             <div id="root">{children}</div>

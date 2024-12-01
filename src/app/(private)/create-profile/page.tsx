@@ -1,5 +1,12 @@
-import UserProfileForm from "@/components/auth/UserProfileForm";
+import CreateUserForm from "@/components/auth/create-user-form";
+import { Header, PageContainer, SectionContainer } from "@/components/layout";
 
 export default function page() {
-  return <UserProfileForm />;
+  return (
+    <PageContainer header={<Header />}>
+      <SectionContainer>
+        <CreateUserForm />
+      </SectionContainer>
+    </PageContainer>
+  );
 }
