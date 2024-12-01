@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { LogOut, MenuIcon } from "lucide-react";
+import { LogOut } from "lucide-react";
 
 import Link from "next/link";
 
@@ -25,21 +25,21 @@ export default function Header() {
   const router = useRouter();
   const oktoContext = useOkto();
   const authenticate = oktoContext?.authenticate;
-  const [transferData, setTransferData] = useState({
+  const [transferData] = useState({
     network_name: "",
     transaction: "",
   });
-  const { setIsCreateHakathonModalOpen, isUserProfileCompleted, setIsUserProfileCompleted, authToken, setAuthToken } =
-    useAppStore((state) => state);
-  const [userDetails, setUserDetails] = useState(null);
-  const [portfolioData, setPortfolioData] = useState(null);
+  const { setIsCreateHakathonModalOpen, isUserProfileCompleted, authToken, setAuthToken } = useAppStore(
+    (state) => state,
+  );
+
   const [wallets, setWallets] = useState<WalletData | null>(null);
   const [transferResponse, setTransferResponse] = useState<ExecuteRawTransactionData | null>(null);
-  const [orderResponse, setOrderResponse] = useState(null);
-  const [error, setError] = useState<string | null>(null);
+
+  const [_, setError] = useState<string | null>(null);
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const executeRawTransaction = oktoContext?.executeRawTransaction;
-  const getRawTransactionStatus = oktoContext?.getRawTransactionStatus;
+
   const createWallet = oktoContext?.createWallet;
   const fetchWallets = async () => {
     try {
@@ -112,7 +112,6 @@ export default function Header() {
 
   useEffect(() => {
     if (authToken) {
-      debugger;
       if (!isUserProfileCompleted) {
         router.push("/create-profile");
       } else {
