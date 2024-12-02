@@ -10,11 +10,12 @@ import { OktoContextType, useOkto } from "okto-sdk-react";
 import { GoogleLogin } from "@react-oauth/google";
 import { Button } from "../ui/button";
 import { useAppStore } from "@/store/store";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export default function Header() {
   const router = useRouter();
+  const path = usePathname();
   const { authenticate, logOut } = useOkto() as OktoContextType;
 
   const { setIsCreateHakathonModalOpen, isUserProfileCompleted, authToken, setAuthToken } = useAppStore(
@@ -42,9 +43,12 @@ export default function Header() {
   };
 
   useEffect(() => {
+    debugger;
     if (authToken) {
       if (!isUserProfileCompleted) {
         router.push("/create-profile");
+      } else if (path === "/") {
+        router.push("dashboard");
       }
     } else {
       router.push("/");
