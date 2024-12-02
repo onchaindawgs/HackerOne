@@ -21,7 +21,7 @@ import { uploadJSONToExaDrive } from "@/utils/UploadJSONToExadrive";
 import { GenerateDevScore } from "@/utils/GenerateDevScore";
 import { OktoContextType, useOkto } from "okto-sdk-react";
 
-const publisherAddr = process.env.NEXT_PUBLIC_PUBLISHER_ADDRESS;
+const publisherAddr = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
 export default function CreateUserForm() {
   const [step, setStep] = useState(1);
   const [file, setFile] = useState<File | null>(null);
@@ -95,6 +95,7 @@ export default function CreateUserForm() {
     if (file) {
       const res = await uploadImageToExaDrive(file, walletAddress);
       const imageExaUrl = res?.trx_data?.url;
+      const devScore = await GenerateDevScore(data);
 
       const userData = {
         ...data,
@@ -102,14 +103,13 @@ export default function CreateUserForm() {
           ...data.personalInfo,
           profilePicture: imageExaUrl,
         },
+        devScore,
       };
 
-      const resp = uploadJSONToExaDrive(userData, walletAddress).then((res) => {
+      uploadJSONToExaDrive(userData, walletAddress).then(() => {
         setIsUserProfileCompleted(true);
         handleRawTxnExecute();
       });
-      const devScore = await GenerateDevScore(data)
-      console.log("User data uploaded to ExaDrive resp", resp, devScore);
     }
   }
 
