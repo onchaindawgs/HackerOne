@@ -8,8 +8,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Briefcase, ChevronRight, Clock, Github, Globe, Mail, MessageCircle, Phone, Users } from "lucide-react";
 import Image from "next/image";
 import { BackgroundGradient } from "@/components/shared";
+import { useEffect, useState } from "react";
+import { OktoContextType, useOkto } from "okto-sdk-react";
 
-const user = {
+const _user = {
   personalInfo: {
     fullName: "Agul",
     email: "atul@gmail.com",
@@ -33,7 +35,7 @@ const user = {
     availability: "Yes",
     preferredWorkStyle: "Small Team",
   },
-  devScore: 150,
+  devScore: 110,
 };
 
 const containerVariants = {
@@ -54,6 +56,22 @@ const itemVariants = {
   },
 };
 export default function page() {
+  const [user, setUser] = useState(_user);
+  const { getWallets } = useOkto() as OktoContextType;
+
+  useEffect(() => {
+    async function fetchUserData() {
+      const wallets = await getWallets();
+      const walletAddress = wallets.wallets[0].address;
+      const response = await fetch(
+        `https://hackerone.exadrivecdn.com/userData/walletAddress/${walletAddress}/data.json`,
+      );
+      const data = await response.json();
+      console.log("data: ", data);
+      setUser(data);
+    }
+    fetchUserData();
+  }, []);
   return (
     <PageContainer header={<Header />}>
       <SectionContainer>
