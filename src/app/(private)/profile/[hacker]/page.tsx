@@ -6,7 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Briefcase, ChevronRight, Clock, Github, Globe, Mail, MessageCircle, Phone, Users } from "lucide-react";
-import { useState } from "react";
 import Image from "next/image";
 import { BackgroundGradient } from "@/components/shared";
 
@@ -55,8 +54,6 @@ const itemVariants = {
   },
 };
 export default function page() {
-  const [isHovered, setIsHovered] = useState(false);
-
   return (
     <PageContainer header={<Header />}>
       <SectionContainer>
@@ -74,8 +71,6 @@ export default function page() {
                     <motion.div
                       className="relative w-48 h-48 mb-6 overflow-hidden border-4 border-purple-200 rounded-full shadow-lg sm:w-64 sm:h-64"
                       whileHover={{ scale: 1.05 }}
-                      onHoverStart={() => setIsHovered(true)}
-                      onHoverEnd={() => setIsHovered(false)}
                     >
                       <Image
                         src={user.personalInfo.profilePicture}
@@ -83,15 +78,6 @@ export default function page() {
                         layout="fill"
                         objectFit="cover"
                       />
-                      {isHovered && (
-                        <motion.div
-                          className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                        >
-                          <p className="text-sm text-white">Hover effect</p>
-                        </motion.div>
-                      )}
                     </motion.div>
                     <motion.h1 className="mb-3 text-3xl font-bold text-gray-800 sm:text-4xl" variants={itemVariants}>
                       {user.personalInfo.fullName}

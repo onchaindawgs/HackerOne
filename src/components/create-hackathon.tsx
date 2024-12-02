@@ -66,9 +66,8 @@ export function CreateHackathonModal({ isOpen, onClose }: CreateHackathonModalPr
         throw new Error("Transaction execution function is not available.");
       }
 
-      const response = await executeRawTransaction(rawData);
+      await executeRawTransaction(rawData).then((res) => res);
 
-      console.log("Transaction response: ", response);
       toast({
         title: "Success",
         description: "Your hackathon has been successfully created!",

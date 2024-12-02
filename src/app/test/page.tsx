@@ -1,9 +1,8 @@
 "use client";
 import { ExtractUserDataFrom } from "@/utils/ExtractUserData";
-import { GenerateDevScore } from "@/utils/GenerateDevScore";
+
 import { uploadImageToExaDrive } from "@/utils/UploadImageToExadrive";
 
-import { getHacker } from "@/view-functions/getHacker";
 import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
 
 const FileUploader: React.FC = () => {
@@ -13,7 +12,9 @@ const FileUploader: React.FC = () => {
     // uploadJSONToExaDrive({testkey1: "value1", testkey2: "value2"}, "/userData/walletAddress")
     // getHacker("0x5718447834fb632f3da178c086796d6e310c13274bdc726a6f87b2deef7d8a80");
     // GenerateDevScore({ "personalInfo": { "fullName": "Agul", "email": "atul@gmail.com", "phone": "+918958318394", "profilePicture": "https://hackerone.exadrivecdn.com/profilePhoto/walletAddress/0x298e51b0b1e15e9d8ed37f5d6d27fa8a2a1286bd786a9b6d7941031225757061/Hackerone.png" }, "professionalDetails": { "githubProfile": "https://github.com/atulbhatt-system32", "twitterHandle": "", "telegramUsername": "", "personalWebsite": "" }, "skills": { "primarySkills": "react", "yearsOfExperience": 0, "learningGoals": "" }, "preferences": { "preferredRole": "fe", "availability": "Yes", "preferredWorkStyle": "Small Team" } })
-    ExtractUserDataFrom('https://hackerone.exadrivecdn.com/userData/walletAddress/0x298e51b0b1e15e9d8ed37f5d6d27fa8a2a1286bd786a9b6d7941031225757061/data.json')
+    ExtractUserDataFrom(
+      "https://hackerone.exadrivecdn.com/userData/walletAddress/0x298e51b0b1e15e9d8ed37f5d6d27fa8a2a1286bd786a9b6d7941031225757061/data.json",
+    );
   }, []);
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
