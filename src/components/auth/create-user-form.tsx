@@ -18,16 +18,17 @@ import {
 import { useAppStore } from "@/store/store";
 import { uploadImageToExaDrive } from "@/utils/UploadImageToExadrive";
 import { uploadJSONToExaDrive } from "@/utils/UploadJSONToExadrive";
-import { useOkto } from "okto-sdk-react";
 import { GenerateDevScore } from "@/utils/GenerateDevScore";
+import { OktoContextType, useOkto } from "okto-sdk-react";
 
+const publisherAddr = process.env.NEXT_PUBLIC_PUBLISHER_ADDRESS;
 export default function CreateUserForm() {
   const [step, setStep] = useState(1);
   const [file, setFile] = useState<File | null>(null);
   const { setIsUserProfileCompleted, wallets } = useAppStore((state) => state);
+  const { getWallets } = useOkto() as OktoContextType;
   const oktoContext = useOkto();
-  const createWallet = oktoContext?.createWallet;
-
+  const executeRawTransaction = oktoContext?.executeRawTransaction;
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -56,13 +57,41 @@ export default function CreateUserForm() {
     },
     mode: "onChange",
   });
-
+  const handleRawTxnExecute = async () => {
+    try {
+      const rawData = {
+        //@ts-expect-error not known
+        network_name: wallets?.[1]?.network_name || "APTOS_TESTNET",
+        transaction: {
+          transactions: [
+            {
+              function: `${publisherAddr}::HackerOneCore::createHackerProfile`,
+              typeArguments: [],
+              functionArguments: [
+                "https://hackerone.exadrivecdn.com/userData/walletAddress/0x298e51b0b1e15e9d8ed37f5d6d27fa8a2a1286bd786a9b6d7941031225757061/data.json",
+                "200",
+              ],
+            },
+          ],
+        },
+      };
+      console.log("rawdata: ", rawData);
+      if (executeRawTransaction) {
+        const response = await executeRawTransaction(rawData);
+        console.log("response: ", response);
+        // setTransferResponse(response);
+        // setActiveSection("transferResponse");
+      }
+      console.log("execting: ");
+    } catch (error) {
+      console.error("error: ", error);
+    }
+  };
   async function onSubmit() {
     const data = form.getValues();
-    console.log({ data });
-    alert("Profile created successfully!");
+    const wallets = await getWallets();
     const walletAddress = wallets?.wallets?.[0]?.address || "";
-    debugger;
+
     if (file) {
       const res = await uploadImageToExaDrive(file, walletAddress);
       const imageExaUrl = res?.trx_data?.url;
@@ -75,11 +104,9 @@ export default function CreateUserForm() {
         },
       };
 
-      debugger;
-
       const resp = uploadJSONToExaDrive(userData, walletAddress).then((res) => {
-        console.log("User data uploaded to ExaDrive res", res);
         setIsUserProfileCompleted(true);
+        handleRawTxnExecute();
       });
       const devScore = await GenerateDevScore(data)
       console.log("User data uploaded to ExaDrive resp", resp, devScore);
