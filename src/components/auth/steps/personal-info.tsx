@@ -9,6 +9,8 @@ import { X } from "lucide-react";
 
 interface PersonalInfoStepProps {
   form: UseFormReturn<FormData>;
+  file: File | null;
+  setFile: (file: File | null) => void;
 }
 
 export function PersonalInfoStep({ form }: PersonalInfoStepProps) {
