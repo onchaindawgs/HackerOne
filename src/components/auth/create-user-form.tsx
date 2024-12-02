@@ -20,14 +20,16 @@ import { uploadImageToExaDrive } from "@/utils/UploadImageToExadrive";
 import { uploadJSONToExaDrive } from "@/utils/UploadJSONToExadrive";
 import { GenerateDevScore } from "@/utils/GenerateDevScore";
 import { OktoContextType, useOkto } from "okto-sdk-react";
+import { useRouter } from "next/router";
 
 const publisherAddr = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
 export default function CreateUserForm() {
+  const router = useRouter();
   const [step, setStep] = useState(1);
   const [file, setFile] = useState<File | null>(null);
   const { setIsUserProfileCompleted } = useAppStore((state) => state);
   const { getWallets, executeRawTransaction } = useOkto() as OktoContextType;
-  
+
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -78,6 +80,7 @@ export default function CreateUserForm() {
       if (executeRawTransaction) {
         const response = await executeRawTransaction(rawData);
         console.log("response: ", response);
+        router.push("/dashboard");
         // setTransferResponse(response);
         // setActiveSection("transferResponse");
       }
