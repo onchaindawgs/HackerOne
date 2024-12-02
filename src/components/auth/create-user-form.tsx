@@ -20,7 +20,7 @@ import { uploadImageToExaDrive } from "@/utils/UploadImageToExadrive";
 import { uploadJSONToExaDrive } from "@/utils/UploadJSONToExadrive";
 import { GenerateDevScore } from "@/utils/GenerateDevScore";
 import { OktoContextType, useOkto } from "okto-sdk-react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 const publisherAddr = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
 export default function CreateUserForm() {
