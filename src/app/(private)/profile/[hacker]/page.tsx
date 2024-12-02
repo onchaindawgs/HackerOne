@@ -83,15 +83,6 @@ export default function page() {
                         layout="fill"
                         objectFit="cover"
                       />
-                      {isHovered && (
-                        <motion.div
-                          className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                        >
-                          <p className="text-sm text-white">Hover effect</p>
-                        </motion.div>
-                      )}
                     </motion.div>
                     <motion.h1 className="mb-3 text-3xl font-bold text-gray-800 sm:text-4xl" variants={itemVariants}>
                       {user.personalInfo.fullName}
