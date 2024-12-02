@@ -24,7 +24,7 @@ const satoshiItalic = localFont({
 });
 
 export default function RootLayout({ children }: { children: ReactNode }) {
-  const GOOGLE_CLIENT_ID = "1051020883677-43q1s4t2reh46t2odpe3oivu3lkrhd73.apps.googleusercontent.com";
+  const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string;
   const OKTO_CLIENT_API_KEY = process.env.NEXT_PUBLIC_OKTO_CLIENT_API_KEY as string;
   return (
     <html lang="en" className="scroll-smooth">
