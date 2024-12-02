@@ -6,7 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Briefcase, ChevronRight, Clock, Github, Globe, Mail, MessageCircle, Phone, Users } from "lucide-react";
-import { useState } from "react";
 import Image from "next/image";
 import { BackgroundGradient } from "@/components/shared";
 

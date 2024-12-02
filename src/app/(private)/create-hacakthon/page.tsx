@@ -1,3 +1,4 @@
+"use client";
 import CreateUserForm from "@/components/auth/create-user-form";
 import { Header, PageContainer, SectionContainer } from "@/components/layout";
 
