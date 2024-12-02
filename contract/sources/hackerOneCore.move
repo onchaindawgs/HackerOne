@@ -180,10 +180,7 @@ module hackerOne::HackerOneCore {
       vector::push_back(&mut hacker_ref.teamInvites, team_id);
    }
 
-   public entry fun acceptTeamInvite(
-    account: &signer, 
-    team_id: u64
-) acquires Teams, Hackers {
+   public entry fun acceptTeamInvite(account: &signer, team_id: u64) acquires Teams, Hackers {
     let addr = signer::address_of(account);
     
     let hackers_mut = borrow_global_mut<Hackers>(@hackerOne);
