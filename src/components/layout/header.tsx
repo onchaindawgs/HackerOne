@@ -7,7 +7,7 @@ import Link from "next/link";
 import Logo from "./logo";
 import Typography from "../ui/typography";
 
-import { ExecuteRawTransactionData, useOkto, WalletData } from "okto-sdk-react";
+import { ExecuteRawTransactionData, useOkto } from "okto-sdk-react";
 import { GoogleLogin } from "@react-oauth/google";
 import { Button } from "../ui/button";
 import { useAppStore } from "@/store/store";
@@ -29,11 +29,9 @@ export default function Header() {
     network_name: "",
     transaction: "",
   });
-  const { setIsCreateHakathonModalOpen, isUserProfileCompleted, authToken, setAuthToken } = useAppStore(
-    (state) => state,
-  );
+  const { setIsCreateHakathonModalOpen, isUserProfileCompleted, authToken, setAuthToken, wallets, setWallets } =
+    useAppStore((state) => state);
 
-  const [wallets, setWallets] = useState<WalletData | null>(null);
   const [transferResponse, setTransferResponse] = useState<ExecuteRawTransactionData | null>(null);
 
   const [_, setError] = useState<string | null>(null);
@@ -45,7 +43,7 @@ export default function Header() {
     try {
       if (createWallet) {
         const walletsData = await createWallet();
-        console.log(walletsData);
+        console.log({ walletsData });
         setWallets(walletsData);
         setActiveSection("wallets");
       } else {
@@ -98,6 +96,7 @@ export default function Header() {
       authenticate(idToken, async (authResponse, error) => {
         if (authResponse) {
           setAuthToken(authResponse.auth_token);
+          fetchWallets();
         }
         if (error) {
           console.error("Authentication error:", error);

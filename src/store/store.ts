@@ -1,4 +1,5 @@
 // import { StatusListType } from "@/pages/codesList/components/types";
+import { WalletData } from "okto-sdk-react";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -9,6 +10,8 @@ interface StoreType {
   setIsUserProfileCompleted: (isCompleted: boolean) => void;
   authToken: string | null;
   setAuthToken: (token: string | null) => void;
+  wallets: WalletData | null;
+  setWallets: (wallets: WalletData | null) => void;
 }
 
 export const useAppStore = create<StoreType>()(
@@ -20,6 +23,8 @@ export const useAppStore = create<StoreType>()(
       setIsUserProfileCompleted: (isCompleted) => set({ isUserProfileCompleted: isCompleted }),
       authToken: null,
       setAuthToken: (token) => set({ authToken: token }),
+      wallets: null,
+      setWallets: (wallets) => set({ wallets }),
     }),
     {
       name: "app-store",

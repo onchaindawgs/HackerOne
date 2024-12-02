@@ -49,19 +49,7 @@ export function PreferencesStep({ form }: PreferencesStepProps) {
           </FormItem>
         )}
       />
-      <FormField
-        control={form.control}
-        name="preferences.timeZone"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Time Zone</FormLabel>
-            <FormControl>
-              <Input placeholder="e.g. UTC-5" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+
       <FormField
         control={form.control}
         name="preferences.preferredWorkStyle"

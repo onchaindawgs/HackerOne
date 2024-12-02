@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import HackathonsList from "@/components/dashboard/hackathons-list";
 import BuildersList from "@/components/dashboard/builders-list";
 import { Header, PageContainer, SectionContainer } from "@/components/layout";

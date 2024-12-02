@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export async function uploadJSONToExaDrive(jsonObject: any, virtualDirectoryPath: string): Promise<any> {
+export async function uploadJSONToExaDrive(jsonObject: any, uid: string): Promise<any> {
   try {
     const jsonString = JSON.stringify(jsonObject);
 
@@ -12,6 +12,7 @@ export async function uploadJSONToExaDrive(jsonObject: any, virtualDirectoryPath
 
     const formData = new FormData();
     formData.append("file", fileWithFileName);
+    const virtualDirectoryPath = `/userData/walletAddress${uid ? "/" + uid : ""}`;
     formData.append("virtualDirectoryPath", virtualDirectoryPath);
 
     const response = await axios.post("/api/uploadToExaDrive", formData);
