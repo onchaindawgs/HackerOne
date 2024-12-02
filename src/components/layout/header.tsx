@@ -43,7 +43,6 @@ export default function Header() {
   };
 
   useEffect(() => {
-    debugger;
     if (authToken) {
       if (!isUserProfileCompleted) {
         router.push("/create-profile");
