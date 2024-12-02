@@ -1,25 +1,17 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { LogOut } from "lucide-react";
 
 import Link from "next/link";
 
 import Logo from "./logo";
-import Typography from "../ui/typography";
 
 import { OktoContextType, useOkto } from "okto-sdk-react";
 import { GoogleLogin } from "@react-oauth/google";
 import { Button } from "../ui/button";
 import { useAppStore } from "@/store/store";
 import { useRouter } from "next/navigation";
-
-const navLinks = [
-  { title: "Create Profile", href: "/create-profile" },
-  {
-    title: "Hacker",
-    href: "/profile/atul",
-  },
-];
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export default function Header() {
   const router = useRouter();
@@ -53,8 +45,6 @@ export default function Header() {
     if (authToken) {
       if (!isUserProfileCompleted) {
         router.push("/create-profile");
-      } else {
-        router.push("/dashboard");
       }
     } else {
       router.push("/");
@@ -72,19 +62,17 @@ export default function Header() {
           {authToken ? (
             isUserProfileCompleted ? (
               <div className="flex gap-2">
-                <nav className="flex items-center gap-6">
-                  {navLinks.map((link) => (
-                    <Link key={link.href} href={link.href} className={`text-sm font-medium hover:text-primary`}>
-                      <Typography variant="p2" className={`font-bold text-white hover:text-primary`}>
-                        {link.title}
-                      </Typography>
-                    </Link>
-                  ))}
-                </nav>
+                <nav className="flex items-center gap-6"></nav>
                 <Button onClick={() => setIsCreateHakathonModalOpen(true)}>Create Hackathon</Button>
                 <Button onClick={handleLogout} variant={"destructive"}>
                   <LogOut />
                 </Button>
+                <Link href="/profile/atul">
+                  <Avatar>
+                    <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
+                </Link>
               </div>
             ) : (
               <>
