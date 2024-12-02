@@ -12,6 +12,7 @@ interface StoreType {
   setAuthToken: (token: string | null) => void;
   wallets: WalletData | null;
   setWallets: (wallets: WalletData | null) => void;
+  resetStore: () => void;
 }
 
 export const useAppStore = create<StoreType>()(
@@ -25,6 +26,13 @@ export const useAppStore = create<StoreType>()(
       setAuthToken: (token) => set({ authToken: token }),
       wallets: null,
       setWallets: (wallets) => set({ wallets }),
+      resetStore: () =>
+        set({
+          isCreateHakathonModalOpen: false,
+          isUserProfileCompleted: false,
+          authToken: null,
+          wallets: null,
+        }),
     }),
     {
       name: "app-store",

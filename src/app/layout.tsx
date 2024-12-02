@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+"use client";
 import type { ReactNode } from "react";
 
 import { ReactQueryProvider } from "@/components/ReactQueryProvider";
@@ -9,6 +9,7 @@ import localFont from "next/font/local";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 import "./globals.css";
+import { BuildType, OktoProvider } from "okto-sdk-react";
 
 const satoshi = localFont({
   src: "./fonts/Satoshi-Variable.ttf",
@@ -22,23 +23,18 @@ const satoshiItalic = localFont({
   weight: "400 700",
 });
 
-export const metadata: Metadata = {
-  applicationName: "HackerOne",
-  title: "HackerOne",
-  description: "A platform where web3 hackers meet others web3 hackers",
-  manifest: "/manifest.json",
-};
-
 export default function RootLayout({ children }: { children: ReactNode }) {
   const GOOGLE_CLIENT_ID = "1051020883677-43q1s4t2reh46t2odpe3oivu3lkrhd73.apps.googleusercontent.com";
-
+  const OKTO_CLIENT_API_KEY = process.env.NEXT_PUBLIC_OKTO_CLIENT_API_KEY as string;
   return (
     <html lang="en" className="scroll-smooth">
       <body className={`${satoshi.variable} ${satoshiItalic.variable} font-sans antialiased`}>
         <WalletProvider>
           <ReactQueryProvider>
             <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-              <div id="root">{children}</div>
+              <OktoProvider apiKey={OKTO_CLIENT_API_KEY} buildType={BuildType.SANDBOX}>
+                <div id="root">{children}</div>
+              </OktoProvider>
             </GoogleOAuthProvider>
 
             <WrongNetworkAlert />

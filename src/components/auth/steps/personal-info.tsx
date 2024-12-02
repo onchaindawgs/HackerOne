@@ -13,7 +13,7 @@ interface PersonalInfoStepProps {
   setFile: (file: File | null) => void;
 }
 
-export function PersonalInfoStep({ form }: PersonalInfoStepProps) {
+export function PersonalInfoStep({ form, setFile }: PersonalInfoStepProps) {
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   const handleImageUpload = (
@@ -21,7 +21,9 @@ export function PersonalInfoStep({ form }: PersonalInfoStepProps) {
     field: { onChange: (value: string) => void },
   ) => {
     const file = event.target.files?.[0];
+
     if (file) {
+      setFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         const result = reader.result as string;
