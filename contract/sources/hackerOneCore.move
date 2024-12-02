@@ -186,43 +186,20 @@ module hackerOne::HackerOneCore {
 ) acquires Teams, Hackers {
     let addr = signer::address_of(account);
     
-    // Verify the hacker exists
     let hackers_mut = borrow_global_mut<Hackers>(@hackerOne);
     assert!(table::contains<address, Hacker>(&hackers_mut.hackers, addr), 301);
     
-    // Get the hacker's profile
     let hacker_ref = table::borrow_mut<address, Hacker>(&mut hackers_mut.hackers, addr);
     
-    // Check if the team invite exists
     let (exists, index) = vector::index_of(&hacker_ref.teamInvites, &team_id);
-    assert!(exists, 302); // Team invite not found
+    assert!(exists, 302);
     
-    // Remove the invite from the list
     vector::remove(&mut hacker_ref.teamInvites, index);
     
-    // Add the hacker to the team
     let teams_mut = borrow_global_mut<Teams>(@hackerOne);
     let team_ref = table::borrow_mut<u64, Team>(&mut teams_mut.teams, team_id);
     
-    // Add hacker to team members
     vector::push_back(&mut team_ref.members, addr);
     
-    // Add team to hacker's joined teams
     vector::push_back(&mut hacker_ref.teamsJoined, team_id);
-}
-
-   // #[view]
-   // public fun getAllHackers(): vector<Hacker> acquires Hackers {
-   //    let hackers_resource = borrow_global<Hackers>(@hackerOne);
-   //    let all_addresses = simple_map::keys(&hackers_resource.hackers);
-   //    getHackers(all_addresses)
-   // }
-
-// #[view]
-// public fun getAllHackers(): vector<Hacker> acquires Hackers {
-//     let hackers_resource = borrow_global<Hackers>(@hackerOne);
-//     let all_addresses =(&hackers_resource.hackers);
-//     getHackers(all_addresses)
-// }
-
-}
+}}
