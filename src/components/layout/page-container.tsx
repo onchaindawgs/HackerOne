@@ -1,4 +1,6 @@
 import React from "react";
+import { CreateHackathonModal } from "../create-hackathon";
+import { useAppStore } from "@/store/store";
 
 type PageContainerProps = {
   children: React.ReactNode;
@@ -7,6 +9,7 @@ type PageContainerProps = {
 
 export default function PageContainer(props: PageContainerProps) {
   const { children, header } = props;
+  const { isCreateHakathonModalOpen, setIsCreateHakathonModalOpen } = useAppStore((state) => state);
 
   return (
     <div className={`flex flex-col overflow-hidden h-screen min-h-screen`}>
@@ -17,6 +20,9 @@ export default function PageContainer(props: PageContainerProps) {
           {header && header}
           {children}
         </div>
+      </div>
+      <div className="overflow-scroll">
+        <CreateHackathonModal isOpen={isCreateHakathonModalOpen} onClose={() => setIsCreateHakathonModalOpen(false)} />
       </div>
     </div>
   );

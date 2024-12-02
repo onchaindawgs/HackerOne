@@ -4,8 +4,7 @@ import { useState } from "react";
 import HackathonsList from "@/components/dashboard/hackathons-list";
 import BuildersList from "@/components/dashboard/builders-list";
 import { Header, PageContainer, SectionContainer } from "@/components/layout";
-import { CreateHackathonModal } from "@/components/create-hackathon";
-import { useAppStore } from "@/store/store";
+
 import { motion } from "framer-motion";
 
 const tabs = [
@@ -15,7 +14,6 @@ const tabs = [
 
 export default function DeveloperDashboard() {
   const [activeTab, setActiveTab] = useState(tabs[0].id);
-  const { isCreateHakathonModalOpen, setIsCreateHakathonModalOpen } = useAppStore((state) => state);
 
   return (
     <PageContainer header={<Header />}>
@@ -48,9 +46,6 @@ export default function DeveloperDashboard() {
           </div>
         </div>
       </SectionContainer>
-      <div className="overflow-scroll">
-        <CreateHackathonModal isOpen={isCreateHakathonModalOpen} onClose={() => setIsCreateHakathonModalOpen(false)} />
-      </div>
     </PageContainer>
   );
 }
