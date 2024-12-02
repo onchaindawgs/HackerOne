@@ -47,7 +47,9 @@ export function CreateHackathonModal({ isOpen, onClose }: CreateHackathonModalPr
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      console.log(values);
+      const {name, description, prizePool} = values;
+
+      
       toast({
         title: "Hackathon Created",
         description: "Your hackathon has been successfully created!",
