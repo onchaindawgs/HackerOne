@@ -1,4 +1,5 @@
 "use client";
+import { GenerateDevScore } from "@/utils/GenerateDevScore";
 import { uploadImageToExaDrive } from "@/utils/UploadImageToExadrive";
 
 import { getHacker } from "@/view-functions/getHacker";
@@ -10,6 +11,7 @@ const FileUploader: React.FC = () => {
   useEffect(() => {
     // uploadJSONToExaDrive({testkey1: "value1", testkey2: "value2"}, "/userData/walletAddress")
     getHacker("0x5718447834fb632f3da178c086796d6e310c13274bdc726a6f87b2deef7d8a80");
+    GenerateDevScore({ "personalInfo": { "fullName": "Agul", "email": "atul@gmail.com", "phone": "+918958318394", "profilePicture": "https://hackerone.exadrivecdn.com/profilePhoto/walletAddress/0x298e51b0b1e15e9d8ed37f5d6d27fa8a2a1286bd786a9b6d7941031225757061/Hackerone.png" }, "professionalDetails": { "githubProfile": "https://github.com/atulbhatt-system32", "twitterHandle": "", "telegramUsername": "", "personalWebsite": "" }, "skills": { "primarySkills": "react", "yearsOfExperience": 0, "learningGoals": "" }, "preferences": { "preferredRole": "fe", "availability": "Yes", "preferredWorkStyle": "Small Team" } })
   }, []);
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {

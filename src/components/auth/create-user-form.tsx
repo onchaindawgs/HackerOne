@@ -19,6 +19,7 @@ import { useAppStore } from "@/store/store";
 import { uploadImageToExaDrive } from "@/utils/UploadImageToExadrive";
 import { uploadJSONToExaDrive } from "@/utils/UploadJSONToExadrive";
 import { useOkto } from "okto-sdk-react";
+import { GenerateDevScore } from "@/utils/GenerateDevScore";
 
 export default function CreateUserForm() {
   const [step, setStep] = useState(1);
@@ -80,7 +81,8 @@ export default function CreateUserForm() {
         console.log("User data uploaded to ExaDrive res", res);
         setIsUserProfileCompleted(true);
       });
-      console.log("User data uploaded to ExaDrive resp", resp);
+      const devScore = await GenerateDevScore(data)
+      console.log("User data uploaded to ExaDrive resp", resp, devScore);
     }
   }
 
