@@ -25,10 +25,9 @@ const publisherAddr = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
 export default function CreateUserForm() {
   const [step, setStep] = useState(1);
   const [file, setFile] = useState<File | null>(null);
-  const { setIsUserProfileCompleted, wallets } = useAppStore((state) => state);
-  const { getWallets } = useOkto() as OktoContextType;
-  const oktoContext = useOkto();
-  const executeRawTransaction = oktoContext?.executeRawTransaction;
+  const { setIsUserProfileCompleted } = useAppStore((state) => state);
+  const { getWallets, executeRawTransaction } = useOkto() as OktoContextType;
+  
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {

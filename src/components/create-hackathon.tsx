@@ -4,13 +4,14 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
+import { OktoContextType, useOkto } from "okto-sdk-react";
+import { AnimatePresence, motion } from "framer-motion";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { motion, AnimatePresence } from "framer-motion";
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "./ui/textarea";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -31,6 +32,7 @@ interface CreateHackathonModalProps {
 
 export function CreateHackathonModal({ isOpen, onClose }: CreateHackathonModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { executeRawTransaction } = useOkto() as OktoContextType;
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -43,23 +45,43 @@ export function CreateHackathonModal({ isOpen, onClose }: CreateHackathonModalPr
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
+
+    const { name, description, prizePool } = values;
+
+    const rawData = {
+      network_name: "APTOS_TESTNET", // Replace with actual network if dynamic
+      transaction: {
+        transactions: [
+          {
+            function: `${process.env.NEXT_PUBLIC_CONTRACT_ADDRESS}::HackerOneCore::CreateHackathon`,
+            typeArguments: [],
+            functionArguments: [name, description, prizePool],
+          },
+        ],
+      },
+    };
+
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      if (!executeRawTransaction) {
+        throw new Error("Transaction execution function is not available.");
+      }
 
-      const {name, description, prizePool} = values;
+      const response = await executeRawTransaction(rawData);
 
-      
+      console.log("Transaction response: ", response);
       toast({
-        title: "Hackathon Created",
+        title: "Success",
         description: "Your hackathon has been successfully created!",
+        variant: "default",
       });
+
       form.reset();
       onClose();
     } catch (error) {
+      console.error("Transaction error: ", error);
       toast({
         title: "Error",
-        description: "There was an error creating your hackathon. Please try again.",
+        description: `Failed to create hackathon:`,
         variant: "destructive",
       });
     } finally {
