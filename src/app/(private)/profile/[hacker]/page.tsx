@@ -55,8 +55,6 @@ const itemVariants = {
   },
 };
 export default function page() {
-  const [isHovered, setIsHovered] = useState(false);
-
   return (
     <PageContainer header={<Header />}>
       <SectionContainer>
@@ -74,8 +72,6 @@ export default function page() {
                     <motion.div
                       className="relative w-48 h-48 mb-6 overflow-hidden border-4 border-purple-200 rounded-full shadow-lg sm:w-64 sm:h-64"
                       whileHover={{ scale: 1.05 }}
-                      onHoverStart={() => setIsHovered(true)}
-                      onHoverEnd={() => setIsHovered(false)}
                     >
                       <Image
                         src={user.personalInfo.profilePicture}
