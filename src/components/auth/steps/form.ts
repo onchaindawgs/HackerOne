@@ -4,14 +4,16 @@ export const personalInfoSchema = z.object({
   fullName: z.string().min(2, "Full name must be at least 2 characters."),
   email: z.string().email("Please enter a valid email address."),
   phone: z.string().min(10, "Please enter a valid phone number."),
-  profilePicture: z.string().optional(),
+  profilePicture: z.string().refine((val) => val !== "", {
+    message: "Please upload a profile picture.",
+  }),
 });
 
 export const professionalDetailsSchema = z.object({
-  githubProfile: z.string().url("Please enter a valid URL."),
-  twitterHandle: z.string().regex(/^@?(\w){1,15}$/, "Please enter a valid Twitter handle."),
-  telegramUsername: z.string().regex(/^@?(\w){5,32}$/, "Please enter a valid Telegram username."),
-  personalWebsite: z.string().url("Please enter a valid URL."),
+  githubProfile: z.string().url("Please enter a valid URL."), // Required
+  twitterHandle: z.optional(z.string().regex(/^@?(\w){1,15}$/, "Please enter a valid Twitter handle.")), // Optional
+  telegramUsername: z.optional(z.string().regex(/^@?(\w){5,32}$/, "Please enter a valid Telegram username.")), // Optional
+  personalWebsite: z.optional(z.string().url("Please enter a valid URL.")), // Optional
 });
 
 export const skillsSchema = z.object({
@@ -23,7 +25,6 @@ export const skillsSchema = z.object({
 export const preferencesSchema = z.object({
   preferredRole: z.string().min(2, "Preferred role is required."),
   availability: z.enum(["Yes", "No"]),
-  timeZone: z.string().min(2, "Time zone is required."),
   preferredWorkStyle: z.enum(["Solo", "Small Team", "Large Team"]),
 });
 
